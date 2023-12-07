@@ -217,58 +217,330 @@
 6 12 10
 */
 
-#include <iostream>
-#include <vector>
-#include <cstring>
+//#include <iostream>
+//#include <vector>
+//#include <cstring>
+//
+//const int MAX = 10001;
+//
+//std::vector<std::pair<int, int>> TREE[MAX];	// 트리를 저장할 벡터
+//bool VISITED[MAX]; // 방문 여부를 저장할 배열
+//int LENGTH; // 트리의 지름을 저장할 변수
+//int BEST; // 가장 먼 노드를 저장할 변수
+//
+//void DFS(int node, int weight) // DFS로 트리의 지름을 찾는 함수
+//{
+//	VISITED[node] = true; // 현재 노드를 방문 처리
+//
+//	for (auto& edge : TREE[node]) // 현재 노드와 연결된 간선을 확인
+//	{
+//		int nextNode = edge.first;
+//		int nextWeight = edge.second;
+//
+//		if (!VISITED[nextNode]) // 다음 노드를 방문하지 않았다면 재귀 호출
+//		{
+//			DFS(nextNode, weight + nextWeight);
+//		}
+//	}
+//	if (weight > LENGTH) // 현재 노드에서 가장 먼 노드를 찾아 지름 갱신
+//	{
+//		LENGTH = weight;
+//		BEST = node;
+//	}
+//}
+//
+//int main()
+//{
+//	int N;
+//	std::cin >> N;
+//
+//	for (int i = 1; i < N; i++)
+//	{
+//		int parent, child, weight;
+//		std::cin >> parent >> child >> weight;
+//
+//		TREE[parent].push_back({ child, weight });
+//		TREE[child].push_back({ parent, weight });
+//	}
+//
+//	DFS(1, 0); // 임의의 노드(1번 노드)에서 가장 먼 노드 찾기
+//
+//	std::memset(VISITED, false, sizeof(VISITED)); // 초기화
+//	LENGTH = 0;
+//
+//	DFS(BEST, 0); // 가장 먼 노드에서 다시 가장 먼 노드 찾기
+//
+//	std::cout << LENGTH << '\n';
+//}
 
-const int MAX = 10001;
+/*
+트리 순회 1991번
 
-std::vector<std::pair<int, int>> TREE[MAX];	// 트리를 저장할 벡터
-bool VISITED[MAX]; // 방문 여부를 저장할 배열
-int LENGTH; // 트리의 지름을 저장할 변수
-int BEST; // 가장 먼 노드를 저장할 변수
+문제
+이진 트리를 입력받아 전위 순회(preorder traversal), 중위 순회(inorder traversal), 후위 순회(postorder traversal)한 결과를 출력하는 프로그램을 작성하시오.
 
-void DFS(int node, int weight) // DFS로 트리의 지름을 찾는 함수
-{
-	VISITED[node] = true; // 현재 노드를 방문 처리
+예를 들어 위와 같은 이진 트리가 입력되면,
 
-	for (auto& edge : TREE[node]) // 현재 노드와 연결된 간선을 확인
-	{
-		int nextNode = edge.first;
-		int nextWeight = edge.second;
+전위 순회한 결과 : ABDCEFG // (루트) (왼쪽 자식) (오른쪽 자식)
+중위 순회한 결과 : DBAECFG // (왼쪽 자식) (루트) (오른쪽 자식)
+후위 순회한 결과 : DBEGFCA // (왼쪽 자식) (오른쪽 자식) (루트)
+가 된다.
 
-		if (!VISITED[nextNode]) // 다음 노드를 방문하지 않았다면 재귀 호출
-		{
-			DFS(nextNode, weight + nextWeight);
-		}
-	}
-	if (weight > LENGTH) // 현재 노드에서 가장 먼 노드를 찾아 지름 갱신
-	{
-		LENGTH = weight;
-		BEST = node;
-	}
-}
+입력
+첫째 줄에는 이진 트리의 노드의 개수 N(1 ≤ N ≤ 26)이 주어진다. 
+둘째 줄부터 N개의 줄에 걸쳐 각 노드와 그의 왼쪽 자식 노드, 오른쪽 자식 노드가 주어진다. 
+노드의 이름은 A부터 차례대로 알파벳 대문자로 매겨지며, 항상 A가 루트 노드가 된다. 자식 노드가 없는 경우에는 .으로 표현한다.
 
-int main()
-{
-	int N;
-	std::cin >> N;
+출력
+첫째 줄에 전위 순회, 둘째 줄에 중위 순회, 셋째 줄에 후위 순회한 결과를 출력한다. 
+각 줄에 N개의 알파벳을 공백 없이 출력하면 된다.
 
-	for (int i = 1; i < N; i++)
-	{
-		int parent, child, weight;
-		std::cin >> parent >> child >> weight;
+예제 입력 1			예제 출력 1
+7					ABDCEFG
+A B C				DBAECFG
+B D .				DBEGFCA
+C E F
+E . .
+F . G
+D . .
+G . .
+*/
 
-		TREE[parent].push_back({ child, weight });
-		TREE[child].push_back({ parent, weight });
-	}
+//#include <iostream>
+//
+//// 1. 가장 먼저 노드를 구성한다.
+//struct Node
+//{
+//	char data;
+//	Node* left;
+//	Node* right;
+//
+//	Node(char d) : data(d), left(nullptr), right(nullptr) {}
+//};
+//
+//// 2. 전위 순회 함수를 만든다.
+//void PreOrder(Node* root)
+//{
+//	// 1. 널값이 아니라면
+//	if (root)
+//	{	// 2. 자기 자신 -> 왼쪽 -> 오른쪽 순으로 출력
+//		std::cout << root->data;
+//		PreOrder(root->left);
+//		PreOrder(root->right);
+//	}
+//}
+//
+//// 3. 중위 순회 함수를 만든다.
+//void InOrder(Node* root)
+//{
+//	// 1. 널값이 아니라면
+//	if (root)
+//	{	// 2. 왼쪽 -> 자기 자신 -> 오른쪽 순으로 출력
+//		InOrder(root->left);
+//		std::cout << root->data;
+//		InOrder(root->right);
+//	}
+//}
+//
+//// 4. 후위 순회 함수를 만든다.
+//void PostOrder(Node* root)
+//{
+//	// 1. 널값이 아니라면
+//	if (root)
+//	{
+//		PostOrder(root->left);
+//		PostOrder(root->right);
+//		std::cout << root->data;
+//	}
+//}
 
-	DFS(1, 0); // 임의의 노드(1번 노드)에서 가장 먼 노드 찾기
+/* ----- < 트리( TREE ) > ----- */
 
-	std::memset(VISITED, false, sizeof(VISITED)); // 초기화
-	LENGTH = 0;
+/*
+Level 0							A			-( 출발지점 : root )
+Level 1						B		C		-( parent node )
+Level 2					D		E		G	-( child node )
+Level 3				H		I				-( leaf node )
 
-	DFS(BEST, 0); // 가장 먼 노드에서 다시 가장 먼 노드 찾기
+< 기본 원칙 >
+	#. 트리의 원소를 노드( node )라고 부른다.
+	#. 부모 노드와 자식 노드의 관계는 어떤 원소를 가리키냐에 따라, 그때 그때 다르다.
+	#. 같은 레벨에 있는, 같은 부모를 갖는 노드들간의 관계를 sibling 관계라고 한다.
+	#. 하나의 트리에는 오직 하나의 root node 만 존재한다.
+	#. 두 node 를 연결하는 경로는 단 하나 뿐이다.
+*/
 
-	std::cout << LENGTH << '\n';
-}
+/* --- < Binary Tree > --- */
+
+/*
+< Binary Tree > : 최대 2개의 자식을 가질 수 있는 트리를 말한다.
+	#. < Full Binary Tree > : 자식이 있는 노드가 반드시 두 개의 자식을 가지고 있다.
+	#. < Perfect Binary Tree > : 모든 노드가 두 개의 자식을 가지고 있다.
+	#. < Complete Binary Tree > : 마지막 레벨을 제외한 모든 레벨의 노드가 있고, 추가될 때는 왼쪽부터 채운다.
+*/
+
+//#include <iostream>
+//#include <stack>
+//#include <queue>
+//
+//namespace MyTree
+//{
+//	struct Node
+//	{
+//		int mData;
+//		Node* mLeft;
+//		Node* mRight;
+//
+//		Node(int data, Node* pLeft, Node* pRight) : mData{ data }, mLeft{ pLeft }, mRight{ pRight }{}
+//	};
+//
+//	class BinaryTree
+//	{
+//	private:
+//		Node* mpRoot;
+//
+//	public:
+//		BinaryTree()
+//		{
+//			mpRoot = CreateNode(0);
+//		}
+//
+//		Node* CreateNode(int data)
+//		{
+//			return new Node(data, nullptr, nullptr);
+//		}
+//
+//		Node* GetRoot() { return mpRoot; }
+//
+//		Node* InsertLeft(Node* parent, int data)
+//		{
+//			parent->mLeft = CreateNode(data);
+//			return parent->mLeft;
+//		}
+//
+//		Node* InsertRight(Node* parent, int data)
+//		{
+//			parent->mRight = CreateNode(data);
+//			return parent->mRight;
+//		}
+//
+//	public:
+//		void Visit(Node* node) { std::cout << node->mData << "-> "; }
+//
+//		void DepthFirst()
+//		{
+//			std::stack<Node*> stack;
+//			stack.push(GetRoot());
+//
+//			while (!stack.empty())
+//			{
+//				auto node = stack.top();
+//				Visit(node);
+//				stack.pop();
+//				if (node->mRight != nullptr)
+//				{
+//					stack.push(node->mRight);
+//				}
+//				if (node->mLeft != nullptr)
+//				{
+//					stack.push(node->mLeft);
+//				}
+//			}
+//		}
+//
+//		void BreadthFirst()
+//		{
+//			std::queue<Node*> queue;
+//			queue.push(GetRoot());
+//
+//			while (!queue.empty())
+//			{
+//				auto node = queue.front();
+//
+//				Visit(node);
+//				queue.pop();
+//				if (node->mLeft != nullptr)
+//				{
+//					queue.push(node->mLeft);
+//				}
+//				if (node->mRight != nullptr)
+//				{
+//					queue.push(node->mRight);
+//				}
+//			}
+//		}
+//
+//		void Pre_Order(Node* pNode)
+//		{
+//			if (pNode == nullptr)
+//			{
+//				return;
+//			}
+//
+//			Visit(pNode);
+//			Pre_Order(pNode->mLeft);
+//			Pre_Order(pNode->mRight);
+//		}
+//
+//		void In_Order(Node* pNode)
+//		{
+//			if (pNode == nullptr)
+//			{
+//				return;
+//			}
+//
+//			In_Order(pNode->mLeft);
+//			Visit(pNode);
+//			In_Order(pNode->mRight);
+//		}
+//
+//		void Post_Order(Node* pNode)
+//		{
+//			if (pNode == nullptr)
+//			{
+//				return;
+//			}
+//
+//			Post_Order(pNode->mLeft);
+//			Post_Order(pNode->mRight);
+//			Visit(pNode);
+//		}
+//
+//		public:
+//			int Sum(Node* pNode)
+//			{
+//				if (pNode == nullptr)
+//				{
+//					return 0;
+//				}
+//
+//				return Sum(pNode->mLeft) + pNode->mData + Sum(pNode->mRight);
+//			}
+//
+//			bool Search(Node* pNode, int value)
+//			{
+//				if (pNode == nullptr)
+//				{
+//					return false;
+//				}
+//
+//				return Search(pNode->mLeft, value) || pNode->mData == value || Search(pNode->mRight, value);
+//			}
+//	};
+//}
+//
+//int main()
+//{
+//	MyTree::BinaryTree myTree;
+//
+//	auto pRoot = myTree.GetRoot();
+//	pRoot->mData = 1;
+//
+//	auto pNode = myTree.InsertLeft(pRoot, 2);
+//	myTree.InsertLeft(pNode, 4);
+//	myTree.InsertRight(pNode, 5);
+//
+//	pNode = myTree.InsertRight(pRoot, 3);
+//	myTree.InsertLeft(pNode, 6);
+//	myTree.InsertRight(pNode, 7);
+//}
