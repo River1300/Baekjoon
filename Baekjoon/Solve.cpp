@@ -584,3 +584,69 @@ Level 3				H		I				-( leaf node )
 //
 //	for (int i = 0; i < 5; i++) std::cout << arr[i] << '\n';
 //}
+
+/* --- < Merge sort > --- */
+
+/*
+분할 정복(divide and conquer) 방법
+문제를 작은 2개의 문제로 분리하고 각각을 해결한 다음, 결과를 모아서 원래의 문제를 해결하는 전략이다.
+분할 정복 방법은 대개 순환 호출을 이용하여 구현한다.
+하나의 리스트를 두 개의 균등한 크기로 분할하고 분할된 부분 리스트를 정렬한 다음, 
+두 개의 정렬된 부분 리스트를 합하여 전체가 정렬된 리스트가 되게 하는 방법이다.
+
+분할(Divide): 입력 배열을 같은 크기의 2개의 부분 배열로 분할한다.
+정복(Conquer): 부분 배열을 정렬한다. 부분 배열의 크기가 충분히 작지 않으면 순환 호출 을 이용하여 다시 분할 정복 방법을 적용한다.
+결합(Combine): 정렬된 부분 배열들을 하나의 배열에 병합한다.
+*/
+
+//#include <iostream>
+//
+//int sorted[5];
+//
+//void Merge(int list[], int left, int mid, int right)
+//{
+//	int i, j, k, l;
+//	i = left;
+//	j = mid + 1;
+//	k = left;
+//
+//	while (i <= mid && j <= right)
+//	{
+//		if (list[i] <= list[j]) sorted[k++] = list[i++];
+//		else sorted[k++] = list[j++];
+//	}
+//
+//	if (i > mid)
+//	{
+//		for (l = j; l <= right; l++) sorted[k++] = list[l];
+//	}
+//	else
+//	{
+//		for (l = i; l <= mid; l++) sorted[k++] = list[l];
+//	}
+//
+//	for (l = left; l <= right; l++)
+//		list[l] = sorted[l];
+//}
+//
+//void Merge_Sort(int list[], int left, int right)
+//{
+//	int mid;
+//
+//	if (left < right)
+//	{
+//		mid = (left + right) / 2;	// 중간 위치를 계산하여 리스트를 균등 분할
+//		Merge_Sort(list, left, mid);	// 중간 위치를 계산하여 리스트를 균등 분할
+//		Merge_Sort(list, mid + 1, right);	  // 중간 위치를 계산하여 리스트를 균등 분할
+//		Merge(list, left, mid, right);	    // 중간 위치를 계산하여 리스트를 균등 분할
+//	}
+//}
+//
+//int main()
+//{
+//	int list[5]{ 7,9,3,4,1 };
+//
+//	Merge_Sort(list, 0, 4);
+//
+//	for (int i = 0; i < 5; i++) std::cout << list[i] << '\n';
+//}
