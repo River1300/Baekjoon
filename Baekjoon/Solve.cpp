@@ -650,3 +650,88 @@ Level 3				H		I				-( leaf node )
 //
 //	for (int i = 0; i < 5; i++) std::cout << list[i] << '\n';
 //}
+
+/* --- < Quick sort > --- */
+
+/*
+분할 정복 알고리즘의 하나로, 평균적으로 매우 빠른 수행 속도를 자랑하는 정렬 방법
+
+리스트 안에 있는 한 요소를 선택한다. 
+이렇게 고른 원소를 피벗(pivot) 이라고 한다.
+피벗을 기준으로 피벗보다 작은 요소들은 모두 피벗의 왼쪽으로 옮겨지고 피벗보다 큰 요소들은 모두 피벗의 오른쪽으로 옮겨진다.
+피벗을 제외한 왼쪽 리스트와 오른쪽 리스트를 다시 정렬한다.
+분할된 부분 리스트에 대하여 순환 호출 을 이용하여 정렬을 반복한다.
+부분 리스트에서도 다시 피벗을 정하고 피벗을 기준으로 2개의 부분 리스트로 나누는 과정을 반복한다.
+부분 리스트들이 더 이상 분할이 불가능할 때까지 반복한다.
+리스트의 크기가 0이나 1이 될 때까지 반복한다.
+
+퀵 정렬(quick sort) 알고리즘의 구체적인 개념
+
+하나의 리스트를 피벗(pivot)을 기준으로 두 개의 비균등한 크기로 분할하고 분할된 부분 리스트를 정렬한 다음, 두 개의 정렬된 부분 리스트를 합하여 전체가 정렬된 리스트가 되게 하는 방법이다.
+
+분할(Divide): 입력 배열을 피벗을 기준으로 비균등하게 2개의 부분 배열(피벗을 중심으로 왼쪽: 피벗보다 작은 요소들, 오른쪽: 피벗보다 큰 요소들)로 분할한다.
+정복(Conquer): 부분 배열을 정렬한다. 부분 배열의 크기가 충분히 작지 않으면 순환 호출 을 이용하여 다시 분할 정복 방법을 적용한다.
+결합(Combine): 정렬된 부분 배열들을 하나의 배열에 합병한다.
+
+순환 호출이 한번 진행될 때마다 최소한 하나의 원소(피벗)는 최종적으로 위치가 정해지므로, 이 알고리즘은 반드시 끝난다는 것을 보장할 수 있다.
+*/
+
+#include <iostream>
+
+// 1. 피벗을 기준으로 2개의 부분 리스트로 나눈다.
+// 2. 피벗보다 작은 값은 모두 왼쪽 부분 리스트로, 큰 값은 오른쪽 부분 리스트로 옮긴다.
+int Partition(int list[], int left, int right)
+{
+	int pivot, temp;
+	int low, high;
+
+	low = left;
+	high = right + 1;
+	pivot = list[left];	// 정렬할 리스트의 가장 왼쪽 데이터를 피벗으로 선택(임의의 값을 피벗으로 선택)
+
+	do {/* low와 high가 교차할 때까지 반복( low < high ) */
+		do {/* list[low]가 피벗보다 작으면 계속 low를 증가 */
+			low++;
+		} while (low <= right && list[low] < pivot);
+		do {/* list[high]가 피벗보다 크면 계속 high를 감소 */
+			high--;
+		} while (high >= left && list[high] > pivot);
+
+		if (low < high)
+		{
+			int temp = list[low];
+			list[low] = list[high];
+			list[high] = temp;
+		}
+	} while (low < high);
+
+	int temp = list[left];
+	list[left] = list[high];
+	list[high] = temp;
+
+	return high;
+}
+
+void QuickSort(int list[], int left, int right) 
+{
+	/* 정렬할 범위가 2개 이상의 데이터이면(리스트의 크기가 0이나 1이 아니면) */
+	if (left < right)
+	{
+		int q = Partition(list, left, right); // q: 피벗의 위치
+
+		// 피벗은 제외한 2개의 부분 리스트를 대상으로 순환 호출
+		QuickSort(list, left, q - 1);
+		QuickSort(list, q + 1, right);
+	}
+}
+
+
+int main()
+{
+	int list[5] = { 5, 3, 8, 4, 9 };
+	QuickSort(list, 0, 4);
+	for (int i = 0; i < 5; i++) 
+	{
+		std::cout << list[i];
+	}
+}
